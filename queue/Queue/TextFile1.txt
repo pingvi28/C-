@@ -1,0 +1,39 @@
+/*// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
+// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+
+#include <iostream>
+#include <queue> //надо подключать библиотеку для очереди
+
+using namespace std;
+
+int main()
+{
+	queue <int> q;
+	int n;
+
+	cout << "enter the num of items (n) and n elements: " << endl; // затем перернеос строки
+	cin >> n;
+
+	for (int h = 0; h < n; h++) {
+		int a;
+		cin >> a;
+		q.push(a); // добавляем в очередь элементы
+	}
+
+	cout << endl;
+
+	cout << "Last item in the queue: " << q.back() << endl; // выв. последенго
+
+	cout << "First item in the queue: " << q.front() << endl; // выв. 1 эл.
+	q.pop(); // удаляем всегдааа 1 элемент из очереди
+
+	cout << "New first item in the queue (after deleting): " << q.front() << endl;
+
+	if (!q.empty()) { cout << "queue is't empty" << endl; } // проверяем пуста ли очередь (нет)
+
+	system("pause");
+
+	return 0;
+}
+
+*/
