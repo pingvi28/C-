@@ -1,0 +1,139 @@
+/*
+   // печать ребер
+    for (int q = 0; q < count; q++) {
+        cout << vertexGraph.top() << " ";
+        vertexGraph.pop();
+        cout << vertexGraph.top() << endl;
+        vertexGraph.pop();
+    }
+
+    // вывод стека
+    while (Stack.empty() == false)
+        {
+            cout << Stack.top() + 1 << " ";
+            Stack.pop();
+        }
+        cout << endl;
+*/
+
+....................................
+
+#include <iostream>
+#include <cstdlib> 
+#include <ctime> 
+#include <vector>
+#include <stack>
+#include <ctime> 
+using namespace std;
+
+vector <vector<int> > graph; 
+stack<int> vertexGraph, Stack;
+vector<int> vizited;
+vector <bool> used;
+int const WHITE = 0, GREY = 1, BLACK = 2;
+
+// create random Graph
+void randomGraph(int n, int& count) {
+    srand(time(NULL));
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            vector<int> row;
+            int flag = rand() % 2;
+            if (flag == 1) {
+                row.push_back(j);
+                vertexGraph.push(j);
+                vertexGraph.push(i);
+                count++;
+            }
+            graph.push_back(row);
+        }
+    }
+}
+
+
+//checking the graph for cyclicity
+bool hasCyclicity(int v, int& cycle_flag) { 
+
+    if (vizited[v] == BLACK) {
+        return false;
+    }
+    else {
+        vizited[v] = 1;
+        for (size_t i = 0; i < graph[v].size(); i++) {
+            int neighbour = graph[v][i]; //coceд нашей проверяемой вершины
+
+            if (vizited[neighbour] == WHITE) {
+                if (hasCyclicity(neighbour, cycle_flag))
+                    return true;
+            }
+            else if (vizited[neighbour] == GREY) { 
+                cycle_flag = neighbour; 
+                return true;
+            }
+        }
+        vizited[v] = BLACK; 
+        return false;
+    }
+}
+
+void dfs(int v) {
+    used[v] = true; //указываем, что использовали данную вершину
+    for (int i = 0; i < graph[v].size(); i++) {
+        int  neighbour = graph[v][i]; //по списку проходим по всем вершинам, к которым можно пройти от вершины v
+        if (!used[neighbour])//и если вершину не рассматривали, то применяем алгоритм поиска в глубину для неё
+            dfs(neighbour);
+    }
+    Stack.push(v); // заносим вершину в вектор, хранящий результат
+}
+
+void topological_sort(int n) {
+    for (int i = 0; i < n; i++) //указываем, что ни одна вершина не была использована
+        used[i] = false;
+    for (int i = 0; i < n; i++)
+        if (!used[i]) //если в ходе предыдущий операций вершина не использовалась
+            dfs(i); // то вызываем для неё алгоритм поиска в глубину
+}
+
+
+int main() {
+    int n, count = 0, cycle_flag = -1;
+    cout << "\nnodes: ";
+    cin >> n;
+    vizited.resize(n,0);
+    used.resize(n);
+    
+    randomGraph(n, count);
+
+    for (int q = 0; q < count; q++) { // печать ребер
+        cout << vertexGraph.top() << " ";
+        vertexGraph.pop();
+        cout << vertexGraph.top() << endl;
+        vertexGraph.pop();
+    }
+
+    cout << "\nvertex: " << count << endl;
+
+    for (int q = 0; q < n; q++) {
+        if (hasCyclicity(q, cycle_flag)) //проверка графа на ацикличность
+            break;
+    }
+ 
+    if (cycle_flag != -1) {
+        cout << "this graph has cycl";
+    }
+    else {
+        srand(time(0));
+        // cout << "\nFollowing is a Topological Sort of the given graph\n";
+        topological_sort(n);
+        cout << "runtime = " << clock() / 1000.0 << endl;
+         while (Stack.empty() == false)
+         {
+             cout << Stack.top() + 1 << " ";
+             Stack.pop();
+         }
+        cout << endl;
+    }
+
+    return 0;
+}
